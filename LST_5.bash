@@ -277,8 +277,10 @@ echo PARSING TAPE6 FILES
 #  and total radiance from tape6 file
 for case in `cat $cseLst`
 do
-	ln ~/elim2.sed $case
-	./tape6parser.bash $case
+
+	#Create link.  If create fails, loop and sleep until successful (don't forget to yell!)
+	ln ~/elim2.sed "${case}" || while [ ! -e "${case}/elim2.sed" ] ; do logger "LINK CREATE FAILED, case=${case} pwd=`pwd`" ; sleep 5 ; ln ~/elim2.sed "${case}" ; done
+	./tape6parser.bash ${case}
 done
 
 echo TAPE6s PARSED
